@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Customer Churn Prediction</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url('https://www.lytics.com/wp-content/uploads/2022/07/article-Customer-Churn-Prediction_-How-to-do-It-and-Reduce-Customer-Churn.jpg') no-repeat center center/cover;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h2 {
+      background: linear-gradient(to right, #a1c4fd, #c2e9fb);
+      color: #222;
+      padding: 15px 30px;
+      width: 70%;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.5rem;
+      margin-bottom: 30px;
+    }
+
+    .main-container {
+      display: flex;
+      gap: 30px;
+      max-width: 1000px;
+      width: 100%;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .info-box {
+      flex: 1;
+      min-width: 280px;
+      background-color: rgba(255, 255, 255, 0.9);
+      padding: 20px;
+      margin-top: 100px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .info-box img {
+      width: 100%;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
+
+    .form-box {
+      flex: 1;
+      min-width: 320px;
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 20px 25px;
+      margin-top: 100px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .form-box label {
+      display: block;
+      font-weight: 600;
+      margin-top: 15px;
+      color: #333;
+    }
+
+    .form-box input,
+    .form-box select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    .form-box input[type="submit"] {
+      background-color: #3f51b5;
+      color: white;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .form-box input[type="submit"]:hover {
+      background-color: #2c3e9f;
+    }
+
+    .prediction {
+      background-color: rgba(0, 0, 0, 0.6);
+      color: white;
+      text-align: center;
+      padding: 18px;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 500px;
+      margin: 25px auto 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Customer Info for Churn Prediction</h2>
+
+  <div class="main-container">
+
+    <div class="info-box">
+      <h3>Why Predicting Churn Matters</h3>
+      <p>
+        Churn prediction helps companies identify which customers are likely to leave their services. 
+        By analyzing usage patterns, demographics, and behavior, businesses can take proactive steps 
+        to retain users, reduce losses, and build better relationships with their customers.
+      </p>
+      <img src="https://static.wixstatic.com/media/4a49ed_64cd6c4fd24b45e3b30d304a73c0a6da~mv2.jpg/v1/crop/x_13,y_0,w_261,h_420/fill/w_271,h_436,al_c,lg_1,q_80,enc_auto/bluebirdrobot-phone2.jpg" alt="Robot Assistant" />
+    </div>
+
+    <div class="form-box">
+      <form action="/predict" method="post">
+
+        <!-- Your full form fields -->
+        <label>Gender:
+          <select name="gender">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </label>
+
+        <label>SeniorCitizen:
+          <select name="SeniorCitizen">
+            <option value="1">Yes</option>
+            <option value="0">No</option>
+          </select>
+        </label>
+
+        <label>Partner:
+          <select name="Partner">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </label>
+
+        <label>Dependents:
+          <select name="Dependents">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </label>
+
+        <label>Tenure:
+          <input type="number" name="tenure" step="1" min="0" max="72" />
+        </label>
+
+        <label>PhoneService:
+          <select name="PhoneService">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </label>
+
+        <label>MultipleLines:
+          <select name="MultipleLines">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No phone service">No phone service</option>
+          </select>
+        </label>
+
+        <label>InternetService:
+          <select name="InternetService">
+            <option value="DSL">DSL</option>
+            <option value="Fiber optic">Fiber optic</option>
+            <option value="No">No</option>
+          </select>
+        </label>
+
+        <label>OnlineSecurity:
+          <select name="OnlineSecurity">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+          </select>
+        </label>
+
+        <label>OnlineBackup:
+          <select name="OnlineBackup">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+          </select>
+        </label>
+
+        <label>DeviceProtection:
+          <select name="DeviceProtection">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+          </select>
+        </label>
+
+        <label>TechSupport:
+          <select name="TechSupport">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+          </select>
+        </label>
+
+        <label>StreamingTV:
+          <select name="StreamingTV">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+          </select>
+        </label>
+
+        <label>StreamingMovies:
+          <select name="StreamingMovies">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+            <option value="No internet service">No internet service</option>
+          </select>
+        </label>
+
+        <label>Contract:
+          <select name="Contract">
+            <option value="Month-to-month">Month-to-month</option>
+            <option value="One year">One year</option>
+            <option value="Two year">Two year</option>
+          </select>
+        </label>
+
+        <label>PaperlessBilling:
+          <select name="PaperlessBilling">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </label>
+
+        <label>PaymentMethod:
+          <select name="PaymentMethod">
+            <option value="Electronic check">Electronic check</option>
+            <option value="Mailed check">Mailed check</option>
+            <option value="Bank transfer (automatic)">Bank transfer (automatic)</option>
+            <option value="Credit card (automatic)">Credit card (automatic)</option>
+          </select>
+        </label>
+
+        <label>Monthly Charges:
+          <input type="number" name="MonthlyCharges" step="1" min="0" />
+        </label>
+
+        <label>Total Charges:
+          <input type="number" name="TotalCharges" step="1" min="0" />
+        </label>
+
+        <input type="submit" value="Predict" />
+      </form>
+
+      <div class="prediction">
+        <h3>{{ prediction_text }}</h3>
+      </div>
